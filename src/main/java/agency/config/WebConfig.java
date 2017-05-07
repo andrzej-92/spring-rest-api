@@ -1,22 +1,51 @@
 package agency.config;
 
+import agency.http.filters.JwtFilter;
+import agency.http.interceptors.AuthInterceptor;
+import agency.services.security.Hash;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-
+import javax.servlet.Filter;
 import java.util.Locale;
 
 @Configuration
-public class MessageContext extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
     private static final String MESSAGE_SOURCE_BASE_NAME = "messages";
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("*").allowedOrigins("*");
+    }
+
+    @Bean
+    public FilterRegistrationBean someFilterRegistration() {
+
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(JWTFilter());
+        registration.addUrlPatterns("/api/*");
+        registration.setName("auth");
+        registration.setOrder(1);
+
+        return registration;
+    }
+
+    @Bean()
+    Filter JWTFilter() {
+        return new JwtFilter();
+    }
 
     @Bean
     public MessageSource messageSource() {
@@ -37,7 +66,9 @@ public class MessageContext extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
         interceptor.setParamName("mylocale");
+
         registry.addInterceptor(interceptor);
+        registry.addInterceptor(new AuthInterceptor());
     }
 
     private LocaleResolver getCookieLocaleResolver() {
@@ -54,4 +85,5 @@ public class MessageContext extends WebMvcConfigurerAdapter {
         resolver.setDefaultLocale(new Locale("pl"));
         return resolver;
     }
+
 }

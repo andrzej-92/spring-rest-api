@@ -1,12 +1,13 @@
-package agency.security.controller;
+package agency.http.controllers;
+
 
 import agency.exceptions.BadCredentialsException;
-import agency.security.dto.AuthDTO;
+import agency.security.AuthDTO;
 import agency.security.model.JwtUser;
-import agency.security.model.User;
-import agency.security.service.JWTService;
-import agency.security.service.UserService;
+import agency.services.security.JWTService;
+import agency.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,12 +16,16 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class JWTController {
+public class AuthController {
+
     @Autowired
-    private UserService userService;
+    private AuthService userService;
 
     @Autowired
     private JWTService jwtService;
+
+    @Value("${auth.jwt.header}")
+    private String authHeader;
 
     @GetMapping(value = "/api/secure/hello/{name}")
     public Map helloPublic(@PathVariable String name, HttpServletRequest request) {
@@ -62,23 +67,10 @@ public class JWTController {
     }
 
     @GetMapping(value = "/api/me")
-    public Map me() {
+    public Map me(HttpServletRequest request) {
 
-        Map<String, User> response = new HashMap<String, User>();
-
-        response.put("user", this.userService.findUserByUserName("user1"));
-
-        response.put("isMap", this.userService.findUserByUserName("admin@dev.local"));
-
-        return response;
-    }
-
-    @GetMapping(value = "/api/products")
-    public Map products(HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
-
-        response.put("products", "Dummy products list");
-        response.put("user", request.getAttribute("jwtUser"));
+        response.put("user", this.userService.user(request));
 
         return response;
     }

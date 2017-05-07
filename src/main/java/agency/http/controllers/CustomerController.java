@@ -1,4 +1,4 @@
-package agency.controllers;
+package agency.http.controllers;
 
 import java.util.List;
 import javax.validation.Valid;

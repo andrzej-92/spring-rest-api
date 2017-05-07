@@ -1,14 +1,13 @@
-package agency.security.service;
+package agency.services.security;
 
 import agency.security.model.JwtUser;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -23,6 +22,9 @@ public class JWTService {
     @Value("${auth.jwt.secret}")
     private String plainSecret;
 
+    @Value("${auth.jwt.header}")
+    private String authHeader;
+
     private String encodedSecret;
 
     @PostConstruct
@@ -30,7 +32,7 @@ public class JWTService {
         this.encodedSecret = generateEncodedSecret(this.plainSecret);
     }
 
-    protected String generateEncodedSecret(String plainSecret) {
+    private String generateEncodedSecret(String plainSecret) {
         if (StringUtils.isEmpty(plainSecret)) {
             throw new IllegalArgumentException("JWT secret cannot be null or empty.");
         }
@@ -39,13 +41,13 @@ public class JWTService {
                 .encodeToString(this.plainSecret.getBytes());
     }
 
-    protected Date getExpirationTime() {
+    private Date getExpirationTime() {
         Date now = new Date();
-        Long expireInMilis = TimeUnit.HOURS.toMillis(expireHours);
-        return new Date(expireInMilis + now.getTime());
+        Long expireInMillis = TimeUnit.HOURS.toMillis(expireHours);
+        return new Date(expireInMillis + now.getTime());
     }
 
-    protected JwtUser getUser(String encodedSecret, String token) {
+    private JwtUser getUser(String encodedSecret, String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(encodedSecret)
                 .parseClaimsJws(token)
@@ -61,11 +63,11 @@ public class JWTService {
         return securityUser;
     }
 
-    public JwtUser getUser(String token) {
+    private JwtUser getUser(String token) {
         return getUser(this.encodedSecret, token);
     }
 
-    protected String getToken(String encodedSecret, JwtUser jwtUser) {
+    private String getToken(String encodedSecret, JwtUser jwtUser) {
         Date now = new Date();
         return Jwts.builder()
                 .setId(UUID.randomUUID().toString())
@@ -79,5 +81,19 @@ public class JWTService {
 
     public String getToken(JwtUser jwtUser) {
         return getToken(this.encodedSecret, jwtUser);
+    }
+
+
+    public JwtUser resolveUser(HttpServletRequest request) throws JwtException {
+
+        String authHeaderVal = request.getHeader(authHeader);
+
+        if (StringUtils.isEmpty(authHeaderVal)) {
+            throw new JwtException("Unauthorized. Token is missing.");
+        }
+
+        authHeaderVal = authHeaderVal.substring(7); // Skip 'Bearer '
+
+        return this.getUser(authHeaderVal);
     }
 }

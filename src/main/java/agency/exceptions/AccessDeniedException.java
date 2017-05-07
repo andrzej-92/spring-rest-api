@@ -1,6 +1,8 @@
 package agency.exceptions;
 
-public class AccessDeniedException extends Exception {
+import javax.servlet.ServletException;
+
+public class AccessDeniedException extends ServletException {
 
     public String detailMessage = "Access Danied.";
 

@@ -1,4 +1,4 @@
-package agency.security.dto;
+package agency.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
