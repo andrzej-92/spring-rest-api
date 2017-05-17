@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeSaveEvent;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 public class UserListener extends AbstractMongoEventListener<User> {
 
     @Autowired
@@ -14,11 +16,17 @@ public class UserListener extends AbstractMongoEventListener<User> {
 
     @Override
     public void onBeforeSave(BeforeSaveEvent<User> event) {
+
+        super.onBeforeSave(event);
+
         String plainPassword = (String) event.getDBObject().get("password");
         Object id = event.getDBObject().get("_id");
 
         if (! StringUtils.isEmpty(plainPassword) && StringUtils.isEmpty(id)) {
             event.getDBObject().put("password", this.hash.encode(plainPassword));
+            event.getDBObject().put("createdAt", new Date());
         }
+
+        event.getDBObject().put("updatedAt", new Date());
     }
 }

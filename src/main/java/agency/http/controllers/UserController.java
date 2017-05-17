@@ -5,38 +5,27 @@ import agency.exceptions.ValidationException;
 import agency.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.LocaleResolver;
-
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 @RestController
 @RequestMapping("api/user")
-public class UserController {
-
-    @Value("${pagination.per_page}")
-    private int perPage;
+public class UserController extends AbstractController {
 
     @Autowired
     private UserRepository userRepository;
 
     @RequestMapping(method = RequestMethod.GET)
-    public Map index(@RequestParam(value = "page") int page, Locale locale) {
-        Pageable pageable = new PageRequest(page, perPage);
+    public Page<User> index(@RequestParam(value = "page") int page) {
+        Pageable pageable = new PageRequest(--page, perPage);
 
-        Map <String, Object> response = new HashMap<>();
-        response.put("content",  userRepository.findAll());
-        response.put("lang",  locale);
-
-        return response;
+        return  userRepository.findAll(pageable);
     }
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)
@@ -56,7 +45,10 @@ public class UserController {
             throw new ValidationException(result);
         }
 
-        return this.userRepository.save(user);
+        User u = this.userRepository.save(user);
+
+        System.out.println(u);
+        return u;
     }
 
     @RequestMapping(method = RequestMethod.PUT)

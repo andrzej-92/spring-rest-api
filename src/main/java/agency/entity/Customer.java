@@ -1,31 +1,46 @@
 package agency.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
-import javax.validation.constraints.NotNull;
+import org.springframework.data.mongodb.core.index.Indexed;
+import javax.validation.constraints.*;
+import java.util.Date;
 
 public class Customer {
 
-    @Id
+    @Id @Getter
     private String id;
 
-    @NotNull
-    private String firstName;
+    @NotNull @Setter @Getter
+    private String name;
 
-    @NotNull
-    private String lastName;
+    @NotNull @Setter @Getter
+    private String surname;
 
-    public Customer() {
+    @Setter @Getter
+    @NotNull @Email
+    @Indexed(unique = true)
+    private String email;
 
-    }
+    @Setter @Getter
+    private Boolean isActive;
 
-    public Customer(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
+    @Past @Setter @Getter
+    private Date bornDate;
 
-    public Customer setFirstName(String name) {
-        this.firstName = name;
+    @Past @Setter @Getter
+    private Date drivingLicenseDate;
 
-        return this;
-    }
+    @Past @Setter @Getter
+    private Date firstPoliceDate;
+
+    @Setter @Getter @Min(0) @Max(70)
+    private int discount;
+
+    @CreatedDate
+    @Setter @Getter
+    private Date registerAt;
 }

@@ -35,8 +35,6 @@ public class JwtFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain
     ) throws IOException, ServletException {
 
-        System.out.println("JWT FILTER ACTIVE !!");
-
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 

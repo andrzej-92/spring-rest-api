@@ -1,6 +1,5 @@
 package agency.http.controllers;
 
-
 import agency.exceptions.BadCredentialsException;
 import agency.security.AuthDTO;
 import agency.security.model.JwtUser;
@@ -9,7 +8,6 @@ import agency.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;

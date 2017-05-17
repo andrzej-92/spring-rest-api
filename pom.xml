@@ -78,6 +78,12 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ztomic</groupId>
+            <artifactId>wkhtmltopdf-java</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -97,6 +103,14 @@
         <repository>
             <id>spring-releases</id>
             <url>https://repo.spring.io/libs-release</url>
+        </repository>
+        <repository>
+            <id>bintray</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>

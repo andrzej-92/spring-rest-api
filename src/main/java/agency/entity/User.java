@@ -7,15 +7,14 @@ import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Document(collection = "users")
+@EnableMongoAuditing
 public class User implements Authenticable {
 
     @Id
@@ -49,4 +48,11 @@ public class User implements Authenticable {
     @LastModifiedDate
     @Setter @Getter
     private Date updatedAt;
+
+    @Override
+    public String toString() {
+        return String.format(
+                "User[id=%s, createdDate=%s, lastModifiedDate=%s, username='%s', email='%s']",
+                id, createdAt, updatedAt, username, email);
+    }
 }

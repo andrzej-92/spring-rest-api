@@ -3,6 +3,7 @@ package agency.exceptions.handler;
 import agency.exceptions.AccessDeniedException;
 import agency.exceptions.BadCredentialsException;
 import agency.exceptions.ValidationException;
+import com.mongodb.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -40,6 +41,14 @@ public class RestExceptionHandler {
         List<FieldError> fieldErrors = result.getFieldErrors();
 
         return processFieldErrors(fieldErrors);
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Object handle(DuplicateKeyException ex) {
+
+        return new RestResponseForException(ex);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
