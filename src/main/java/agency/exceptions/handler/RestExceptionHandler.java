@@ -2,8 +2,9 @@ package agency.exceptions.handler;
 
 import agency.exceptions.AccessDeniedException;
 import agency.exceptions.BadCredentialsException;
+import agency.exceptions.LogicException;
 import agency.exceptions.ValidationException;
-import com.mongodb.DuplicateKeyException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -47,6 +48,14 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public Object handle(DuplicateKeyException ex) {
+
+        return new RestResponseForException(ex);
+    }
+
+    @ExceptionHandler(LogicException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public Object handle(LogicException ex) {
 
         return new RestResponseForException(ex);
     }
@@ -154,7 +163,11 @@ public class RestExceptionHandler {
             try {
                 message = messageSource.getMessage(className, null, locale);
             } catch (NoSuchMessageException ex) {
-                message = e.getMessage();
+                try {
+                    message = messageSource.getMessage(e.getMessage(), null, locale);
+                } catch (NoSuchMessageException exception) {
+                    message = e.getMessage();
+                }
             }
             this.trace = e.getStackTrace();
             this.message = message;

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static agency.services.AuthService.USER_REQUEST_KEY;
+
 @RestController
 @CrossOrigin(origins = "*")
 public class AuthController {
@@ -30,8 +32,7 @@ public class AuthController {
         Map<String, Object> response = new HashMap<>();
 
         response.put("Hello", name);
-
-        response.put("user", request.getAttribute("jwtUser"));
+        response.put("user", request.getAttribute(USER_REQUEST_KEY));
 
         return response;
     }

@@ -1,6 +1,9 @@
 package agency.http.controllers;
 
 import javax.validation.Valid;
+
+import agency.exceptions.LogicException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,23 +33,31 @@ public class CustomerController extends AbstractController {
         return this.customers.findOne(id);
     }
     @RequestMapping(method = RequestMethod.POST)
-    public Customer create(@Valid @RequestBody Customer customer, BindingResult result) throws ValidationException {
+    public Customer create(@Valid @RequestBody Customer customer, BindingResult result) throws ValidationException, LogicException {
 
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
 
-        return this.customers.save(customer);
+        try {
+            return this.customers.save(customer);
+        } catch (DuplicateKeyException e) {
+            throw new LogicException("Unique.customer.email");
+        }
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Customer save(@Valid @RequestBody Customer customer, BindingResult result) throws ValidationException {
+    public Customer save(@Valid @RequestBody Customer customer, BindingResult result) throws ValidationException, LogicException {
 
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
 
-        return this.customers.save(customer);
+        try {
+            return this.customers.save(customer);
+        } catch (DuplicateKeyException e) {
+            throw new LogicException("Unique.customer.email");
+        }
     }
 
     @RequestMapping(method = RequestMethod.DELETE)

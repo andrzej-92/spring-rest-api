@@ -2,20 +2,18 @@ package agency.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Document(collection = "customers")
+@Document(collection = "products")
 @EnableMongoAuditing
-public class Customer {
+public class Product {
 
     @Id @Getter
     private String id;
@@ -24,29 +22,22 @@ public class Customer {
     private String name;
 
     @NotNull @Setter @Getter
-    private String surname;
+    private String description;
 
-    @Setter @Getter
-    @NotNull @Email @Indexed(unique = true)
-    private String email;
+    @NotNull @Setter @Getter @Min(0)
+    private Double pricePerMonth;
+
+    @NotNull @Setter @Getter @Min(0)
+    private Double pricePerQuarter;
+
+    @NotNull @Setter @Getter @Min(0)
+    private Double pricePerHalfYear;
+
+    @NotNull @Setter @Getter @Min(0)
+    private Double pricePerYear;
 
     @Setter @Getter
     private Boolean isActive;
-
-    @Past @Setter @Getter
-    private Date bornDate;
-
-    @Setter @Getter
-    private String phone;
-
-    @Past @Setter @Getter
-    private Date drivingLicenseDate;
-
-    @Past @Setter @Getter
-    private Date firstPoliceDate;
-
-    @Setter @Getter @Min(0) @Max(100)
-    private int discount;
 
     @CreatedDate
     @Setter @Getter
