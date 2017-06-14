@@ -10,8 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/product")
@@ -22,9 +23,19 @@ public class ProductController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<Product> index(@RequestParam(value = "page") int page) {
+
         Pageable pageable = new PageRequest(--page, perPage);
 
         return products.findAll(pageable);
+    }
+
+    @RequestMapping(value="/active", method = RequestMethod.GET)
+    public Map<String, Object> active() {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", products.findActive());
+
+        return response;
     }
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)
@@ -32,33 +43,33 @@ public class ProductController extends AbstractController {
         return this.products.findOne(id);
     }
     @RequestMapping(method = RequestMethod.POST)
-    public Product create(@Valid @RequestBody Product customer, BindingResult result) throws ValidationException, LogicException {
+    public Product create(@Valid @RequestBody Product product, BindingResult result) throws ValidationException, LogicException {
 
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
 
-        return this.products.save(customer);
+        return this.products.save(product);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Product save(@Valid @RequestBody Product customer, BindingResult result) throws ValidationException, LogicException {
+    public Product save(@Valid @RequestBody Product product, BindingResult result) throws ValidationException, LogicException {
 
         if (result.hasErrors()) {
             throw new ValidationException(result);
         }
 
-        return this.products.save(customer);
+        return this.products.save(product);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseBody
     public Product delete(@RequestParam(value = "id") String id) {
 
-        Product user = this.products.findOne(id);
+        Product product = this.products.findOne(id);
 
-        products.delete(user);
+        products.delete(product);
 
-        return user;
+        return product;
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/user")
@@ -26,6 +28,15 @@ public class UserController extends AbstractController {
         Pageable pageable = new PageRequest(--page, perPage);
 
         return  userRepository.findAll(pageable);
+    }
+
+    @RequestMapping(value="/active", method = RequestMethod.GET)
+    public Map<String, Object> active() {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", userRepository.findActive());
+
+        return response;
     }
 
     @RequestMapping(value = "/show", method = RequestMethod.GET)

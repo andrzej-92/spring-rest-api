@@ -14,6 +14,9 @@ import agency.entity.Customer;
 import agency.exceptions.ValidationException;
 import agency.repositories.CustomerRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/customer")
 public class CustomerController extends AbstractController {
@@ -28,6 +31,15 @@ public class CustomerController extends AbstractController {
         return customers.findAll(pageable);
     }
 
+    @RequestMapping(value="/active", method = RequestMethod.GET)
+    public Map<String, Object> active() {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", customers.findActive());
+
+        return response;
+    }
+
     @RequestMapping(value = "/show", method = RequestMethod.GET)
     public Customer show(@RequestParam(value="id") String id) {
         return this.customers.findOne(id);
@@ -39,11 +51,13 @@ public class CustomerController extends AbstractController {
             throw new ValidationException(result);
         }
 
-        try {
-            return this.customers.save(customer);
-        } catch (DuplicateKeyException e) {
+        Customer exists = this.customers.findByEmail(customer.getEmail());
+
+        if (exists != null) {
             throw new LogicException("Unique.customer.email");
         }
+
+        return this.customers.save(customer);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -53,21 +67,23 @@ public class CustomerController extends AbstractController {
             throw new ValidationException(result);
         }
 
-        try {
-            return this.customers.save(customer);
-        } catch (DuplicateKeyException e) {
+        Customer exists = this.customers.findByEmail(customer.getEmail());
+
+        if (exists != null && !exists.getId().equals(customer.getId())) {
             throw new LogicException("Unique.customer.email");
         }
+
+        return this.customers.save(customer);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseBody
     public Customer delete(@RequestParam(value = "id") String id) {
 
-        Customer user = this.customers.findOne(id);
+        Customer customer = this.customers.findOne(id);
 
-        customers.delete(user);
+        customers.delete(customer);
 
-        return user;
+        return customer;
     }
 }
