@@ -27,7 +27,7 @@ public class AuthService {
     @Autowired
     private Hash hash;
 
-    private static Map<String, User> users = new HashMap<String, User>();
+    private static Map<String, User> users = new HashMap<>();
 
     static {
         User u = new User();
@@ -53,11 +53,7 @@ public class AuthService {
 
         Authenticable mongoUser = this.userProvider.findUserByUsername(userName);
 
-        if (null != mongoUser) {
-            return this.hash.matches(password, mongoUser.getPassword());
-        }
-
-        return false;
+        return null != mongoUser && this.hash.matches(password, mongoUser.getPassword());
     }
 
     public Authenticable user(HttpServletRequest request) {

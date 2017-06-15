@@ -2,41 +2,47 @@ package agency.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Email;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
 
-class ProductVariant {
-    @Getter @Setter @NotNull
-    private String name;
-
-    @Getter @Setter @NotNull
-    private Double price;
-}
-
-@Document(collection = "products")
+@Document(collection = "owners")
 @EnableMongoAuditing
-public class Product {
+public class Owner {
 
-    @Id @Getter
+    @Id @Getter @Setter
     private String id;
 
     @NotNull @Setter @Getter
     private String name;
 
     @NotNull @Setter @Getter
-    private String description;
+    private String surname;
 
     @Setter @Getter
-    private ArrayList<ProductVariant> variants = new ArrayList<>();
+    private String address;
 
     @Setter @Getter
-    private Boolean isActive;
+    private String city;
+
+    @Setter @Getter
+    private String companyName;
+
+    @Setter @Getter
+    private String vatNumber;
+
+    @Setter @Getter
+    @NotNull @Email @Indexed(unique = true)
+    private String email;
+
+    @Setter @Getter
+    private String phone;
 
     @CreatedDate
     @Setter @Getter

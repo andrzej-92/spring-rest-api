@@ -1,10 +1,7 @@
 package agency.config;
 
 import agency.entity.Policy;
-import agency.entity.listeners.CustomerListener;
-import agency.entity.listeners.PolicyListener;
-import agency.entity.listeners.ProductListener;
-import agency.entity.listeners.UserListener;
+import agency.entity.listeners.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,5 +26,10 @@ public class MongoDBConfig {
     @Bean
     public PolicyListener policyListener() {
         return new PolicyListener();
+    }
+
+    @Bean
+    public OwnerListener ownerListener() {
+        return new OwnerListener();
     }
 }

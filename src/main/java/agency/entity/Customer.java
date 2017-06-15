@@ -9,9 +9,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.validation.constraints.*;
 import java.util.Date;
+
 
 @Document(collection = "customers")
 @EnableMongoAuditing
@@ -25,6 +25,24 @@ public class Customer {
 
     @NotNull @Setter @Getter
     private String surname;
+
+    @Setter @Getter
+    private String address;
+
+    @Setter @Getter
+    private String city;
+
+    @Setter @Getter
+    private String personalNumber;
+
+    @Setter @Getter
+    private Boolean isCompany;
+
+    @Setter @Getter
+    private String companyName;
+
+    @Setter @Getter
+    private String vatNumber;
 
     @Setter @Getter
     @NotNull @Email @Indexed(unique = true)
@@ -55,4 +73,8 @@ public class Customer {
     @LastModifiedDate
     @Setter @Getter
     private Date updatedAt;
+
+    public String getFullName() {
+        return this.getName() + " " + this.getSurname();
+    }
 }

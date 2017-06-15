@@ -48,11 +48,4 @@ public class User implements Authenticable {
     @LastModifiedDate
     @Setter @Getter
     private Date updatedAt;
-
-    @Override
-    public String toString() {
-        return String.format(
-                "User[id=%s, createdDate=%s, lastModifiedDate=%s, username='%s', email='%s']",
-                id, createdAt, updatedAt, username, email);
-    }
 }

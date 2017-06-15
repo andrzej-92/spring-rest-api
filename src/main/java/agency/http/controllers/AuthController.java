@@ -1,5 +1,6 @@
 package agency.http.controllers;
 
+import agency.exceptions.AccessDeniedException;
 import agency.exceptions.BadCredentialsException;
 import agency.security.AuthDTO;
 import agency.security.model.JwtUser;
@@ -66,7 +67,11 @@ public class AuthController {
     }
 
     @GetMapping(value = "/api/me")
-    public Map me(HttpServletRequest request) {
+    public Map me(HttpServletRequest request) throws AccessDeniedException {
+
+        if (null == this.userService.user(request)) {
+           throw new AccessDeniedException();
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("user", this.userService.user(request));

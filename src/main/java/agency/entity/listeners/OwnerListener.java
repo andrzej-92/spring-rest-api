@@ -1,17 +1,16 @@
 package agency.entity.listeners;
 
-import agency.entity.Policy;
+import agency.entity.Owner;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
-import org.springframework.data.mongodb.core.mapping.event.AfterConvertEvent;
 import org.springframework.data.mongodb.core.mapping.event.BeforeSaveEvent;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
-public class PolicyListener extends AbstractMongoEventListener<Policy> {
+public class OwnerListener extends AbstractMongoEventListener<Owner> {
 
     @Override
-    public void onBeforeSave(BeforeSaveEvent<Policy> event) {
+    public void onBeforeSave(BeforeSaveEvent<Owner> event) {
 
         super.onBeforeSave(event);
 
@@ -22,10 +21,5 @@ public class PolicyListener extends AbstractMongoEventListener<Policy> {
         }
 
         event.getDBObject().put("updatedAt", new Date());
-    }
-
-    @Override
-    public void onAfterConvert(AfterConvertEvent<Policy> event) {
-        event.getSource().checkGeneratedFile();
     }
 }
