@@ -10,4 +10,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     @Query("{'isActive': true }")
     public List<Product> findActive();
+
+    @Query(value = "{'isActive': true }", count = true)
+    public int getActiveProductsCount();
 }

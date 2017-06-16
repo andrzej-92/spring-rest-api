@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
-public class PolicyGenerator {
+class PolicyGenerator {
 
     @Setter @Getter
     private Policy policy;

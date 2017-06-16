@@ -16,4 +16,7 @@ public interface CustomerRepository extends MongoRepository<Customer, String> {
     @Query("{'isActive': true }")
     public List<Customer> findActive();
 
+    @Query(value = "{'isActive': true }", count = true)
+    public int getActiveCustomerCount();
+
 }

@@ -107,7 +107,6 @@
                 </td>
                 <td>
                     <div class="right">
-                        {{ owner.getCompanyName() }} <br />
                         {{ policy.getClosedAtFormated() }} <br />
                         {{ owner.getCity() }} <br />
                     </div>
@@ -141,7 +140,9 @@
 
                     <td class="right">
                         <h4 class="right">Dane ubezpieczyciela</h4>
-
+                        {% if(owner.getCompanyName()) %}
+                            <div>{{ owner.getCompanyName() }}</div>
+                        {% endif %}
                         <div>{{ owner.getName() }} {{ owner.getSurname() }}</div>
                         <div>{{ owner.getAddress() }}</div>
                         <div>{{ owner.getCity() }}</div>
@@ -171,14 +172,12 @@
 
     <section>
         <h4>Przedmiot ubezpieczenia</h4>
-
         <div>
             <b>{{ policy.getSubject() }}</b>
         </div>
         <div>
             {{ policy.getSubjectInfo() }}
         </div>
-
         <div>
             {{ policy.getSubjectDetails() }}
         </div>
@@ -187,7 +186,6 @@
 
     <section>
         <h4>Informacje dodatkowe</h4>
-
         <div>
             {{ policy.getDescription() }}
         </div>
@@ -196,7 +194,6 @@
 
     <section>
         <h4>Szczegóły oferty</h4>
-
         <table>
             <tr>
                 <td>Nazwa</td>
@@ -222,7 +219,6 @@
                 </td>
             </tr>
         </table>
-
     </section>
 
     <section>
