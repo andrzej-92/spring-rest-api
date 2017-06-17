@@ -12,5 +12,5 @@ public interface PoliciesRepository extends MongoRepository<Policy, String> {
     public int getActivePoliciesCount();
 
     @Query(value = "{'closedAt': { $gt: ?0, $lt: ?1 }  }", count = true)
-    public int findByClosetAtBeetween(Date from, Date to);
+    public int findByClosedAtBetweenCount(Date from, Date to);
 }

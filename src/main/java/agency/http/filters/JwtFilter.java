@@ -38,6 +38,10 @@ public class JwtFilter implements Filter {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        httpResponse.addHeader("Access-Control-Allow-Origin", "*");
+        httpResponse.addHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Request-With, Accept");
+        httpResponse.addHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH");
+
         String uri = httpRequest.getRequestURI();
 
         if (uri.equals("/api/login")) {

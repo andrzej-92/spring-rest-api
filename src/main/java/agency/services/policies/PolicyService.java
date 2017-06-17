@@ -6,7 +6,6 @@ import agency.repositories.PoliciesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import agency.entity.Policy;
-
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -65,7 +64,7 @@ public class PolicyService {
             Date to = Date.from(today.toInstant());
 
             Map <String, Object> historyItem = new HashMap<>();
-            historyItem.put("value", this.policiesRepository.findByClosetAtBeetween(from, to));
+            historyItem.put("value", this.policiesRepository.findByClosedAtBetweenCount(from, to));
             historyItem.put("label", date);
             historyItem.put("display", display);
             history.add(historyItem);

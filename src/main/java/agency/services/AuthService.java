@@ -27,43 +27,15 @@ public class AuthService {
     @Autowired
     private Hash hash;
 
-    private static Map<String, User> users = new HashMap<>();
-
-    static {
-        User u = new User();
-        u.setUsername("admin");
-        u.setPassword("admin");
-        u.setEmail("admin@dev.local");
-        u.setIsActive(true);
-
-        users.put("admin", u);
-    }
-
-    private User findUserByUserName(String userName) {
-        return users.get(userName);
-    }
-
     public boolean authenticate(String userName, CharSequence password) {
 
-        User user = findUserByUserName(userName);
+        Authenticable user = this.userProvider.findUserByUsername(userName);
 
-        if (null != user) {
-            return user.getPassword().equals(password);
-        }
-
-        Authenticable mongoUser = this.userProvider.findUserByUsername(userName);
-
-        return null != mongoUser && this.hash.matches(password, mongoUser.getPassword());
+        return null != user && this.hash.matches(password, user.getPassword());
     }
 
     public Authenticable user(HttpServletRequest request) {
         JwtUser u = this.tokenService.resolveUser(request);
-
-        User memory = this.findUserByUserName(u.getUsername());
-
-        if (null != memory) {
-            return memory;
-        }
 
         return this.userProvider.findUserByUsername(u.getUsername());
     }

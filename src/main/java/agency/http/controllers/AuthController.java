@@ -16,7 +16,6 @@ import java.util.Map;
 import static agency.services.AuthService.USER_REQUEST_KEY;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
@@ -70,7 +69,7 @@ public class AuthController {
     public Map me(HttpServletRequest request) throws AccessDeniedException {
 
         if (null == this.userService.user(request)) {
-           throw new AccessDeniedException();
+           //throw new AccessDeniedException();
         }
 
         Map<String, Object> response = new HashMap<>();
