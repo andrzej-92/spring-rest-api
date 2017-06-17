@@ -1,6 +1,5 @@
 package agency.services;
 
-import agency.entity.User;
 import agency.security.contracts.Authenticable;
 import agency.security.contracts.UserProviderInterface;
 import agency.security.model.JwtUser;
@@ -8,10 +7,7 @@ import agency.services.security.Hash;
 import agency.services.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthService {

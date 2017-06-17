@@ -1,6 +1,5 @@
 package agency.http.filters;
 
-import agency.exceptions.AccessDeniedException;
 import agency.security.contracts.Authenticable;
 import agency.security.contracts.UserProviderInterface;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -54,11 +54,9 @@ public class JWTService {
                 .getBody();
 
         String username = claims.getSubject();
-        String role = (String) claims.get("role");
         JwtUser securityUser = new JwtUser();
 
         securityUser.setUsername(username);
-        securityUser.setRole(role);
 
         return securityUser;
     }
@@ -72,7 +70,6 @@ public class JWTService {
         return Jwts.builder()
                 .setId(UUID.randomUUID().toString())
                 .setSubject(jwtUser.getUsername())
-                .claim("role", jwtUser.getRole())
                 .setIssuedAt(now)
                 .setExpiration(getExpirationTime())
                 .signWith(SignatureAlgorithm.HS512, encodedSecret)
