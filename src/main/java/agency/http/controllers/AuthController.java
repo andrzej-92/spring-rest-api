@@ -56,7 +56,7 @@ public class AuthController {
 
         if (hasValidCredentials) {
             Map<String, String> response = new HashMap<>();
-            JwtUser user = new JwtUser(userName, passWord);
+            JwtUser user = new JwtUser(userName);
             response.put("token", jwtService.getToken(user));
 
             return response;
@@ -69,7 +69,7 @@ public class AuthController {
     public Map me(HttpServletRequest request) throws AccessDeniedException {
 
         if (null == this.userService.user(request)) {
-           //throw new AccessDeniedException();
+           throw new AccessDeniedException();
         }
 
         Map<String, Object> response = new HashMap<>();
