@@ -1,8 +1,10 @@
 package agency.http.controllers;
 
 import agency.entity.User;
+import agency.exceptions.LogicException;
 import agency.exceptions.ValidationException;
 import agency.repositories.UserRepository;
+import agency.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +13,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,9 +77,15 @@ public class UserController extends AbstractController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseBody
-    public User delete(@RequestParam(value = "id") String id) {
+    public User delete(@RequestParam(value = "id") String id, HttpServletRequest request) throws LogicException {
+
+        User current = (User) request.getAttribute(AuthService.USER_REQUEST_KEY);
 
         User user = this.userRepository.findOne(id);
+
+        if (current.getId().equals(user.getId())) {
+            throw new LogicException("Nie możesz usunąć własnego konta!");
+        }
 
         userRepository.delete(user);
 
